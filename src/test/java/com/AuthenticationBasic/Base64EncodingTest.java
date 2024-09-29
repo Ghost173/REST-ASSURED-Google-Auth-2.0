@@ -1,10 +1,10 @@
-package com.basic;
+package com.AuthenticationBasic;
 
 import org.testng.annotations.Test;
 
 import java.util.Base64;
 
-public class EncodingTest {
+public class Base64EncodingTest {
 
     @Test(description = "Its just testcase for how base 64 encoding works")
     public void base64Encoding() {
