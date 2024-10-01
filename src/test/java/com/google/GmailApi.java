@@ -15,6 +15,8 @@ import org.testng.annotations.Test;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.Properties;
 
 import static io.restassured.RestAssured.given;
@@ -56,15 +58,35 @@ public class GmailApi {
 
     @Test
     public void getUserProfile() {
-        given()
+        given(requestSpecification)
                 .basePath("/gmail/v1")
                 .pathParam("userid", user_id)
                 .when()
                 .get("/users/{userid}/profile")
-                .then();
+                .then().spec(responseSpecification)
+                .log().all();
     }
 
+    @Test
+    public void sendEmail() {
+        String message = "From: fiverrprakash@gmail.com\n" +
+                "To: jpirakas007@gmail.com\n" +
+                "Subject: Test email from API\n" +
+                "\n" +
+                "sending from gmail api automation";
 
+        String base64UrlEncode = Base64.getUrlEncoder().encodeToString(message.getBytes());
+        HashMap<String, String> payload = new HashMap<>();
+        payload.put("raw",base64UrlEncode);
+
+        given(requestSpecification)
+                .body(payload)
+                .basePath("/gmail/v1")
+                .pathParam("userid", user_id)
+                .when()
+                .post("users/{userid}/messages/send")
+                .then().spec(responseSpecification);
+    }
 
 
 }
